@@ -44,7 +44,7 @@ tar zcvf study_name.tar.gz ./study_folder
 To load your study into cBioPortal, all you need to do is drop your archived data file into the designated drop off sites. 
 
 Currently, we have two dropoff sites:
-- OICR Users: /data/cbioporatl_uploads on ociwire transfer data nodes
+- OICR Users: /data/cbioportal_uploads on ociwire transfer data nodes
 - UHN Users: /data/cbioportal/cbio-env/dropoff on merry
 
 The cbio watchdog, a python module running as a background process, will pick it up and execute the importing script of cBioPortal. This script first validates the data and, if the validation succeeds, it starts loading the data. If any errors occur during the validiting or loading, they are logged for troubleshooting. If all goes well, your study should become availabe at cbioportal.ca. All dropoffs will be deleted after the loading process is finished.
