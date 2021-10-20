@@ -1,4 +1,6 @@
 # Loading Study Data to cbioportal.ca
+# Live on cbioportal2
+
 ## Introduction
 This document outlines the steps you will need to follow to load your study data into cbioportal.ca. The data flow diagram below provides the information about the inputs and outputs of each process.
 
