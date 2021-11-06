@@ -15,7 +15,7 @@ PORTAL_HOME = '/data/cbioportal/cbio-env/importer'
 logging.basicConfig(format='%(asctime)s %(message)s', datefmt='%m/%d/%Y %I:%M:%S %p', level=logging.INFO,
                     filename=os.path.join(WORKING_DIR, "cbio-%s.log"%time.strftime("%Y%m%d-%H%M%S")),
                     filemode='w')
-console = logging.StreamHandler(sys.stdout)
+console = logging.StreamHandler()
 console.setLevel(logging.INFO)
 formatter = logging.Formatter('%(name)-1s: %(levelname)-1s %(message)s')
 console.setFormatter(formatter)
@@ -50,15 +50,20 @@ def untar_file(tar_ball):
                         "GRCh37" if genome == 'hg19' else "GRCh38")
                     logging.info(f"kick off loader {loader_cmd}")
                     if (os.system(loader_cmd) == 0):
+                        logging.info(f"{study_name} imported")
                         try:
                             os.remove(tar_ball)
                             os.system("rm -rf %s"%outdir)
                             if not glob.glob(os.path.join(WORKING_DIR,'*.tar.gz')):
-                                restart_cmd = '/usr/local/tomcat/bin/catalina.sh stop;/usr/local/tomcat/bin/catalina.sh start'
+                                restart_cmd = '/usr/local/tomcat/bin/catalina.sh stop;sleep 8;/usr/local/tomcat/bin/catalina.sh start'
                                 if (os.system(restart_cmd) == 0):
                                     logging.info("cBioPortal database restarted")
                         except:
                             logging.error(f"{tar_ball}/{outdir} does not exist")
+                    else:
+                       logging.info(f"importing {study_name} failed, please check log file for errors")
+                else:
+                    logging.info(f"{tar_ball}/{outdir} does not exist")
         except:
             logging.warning ('Did not find %s in tar archive' % filename)
     my_tar.close()
