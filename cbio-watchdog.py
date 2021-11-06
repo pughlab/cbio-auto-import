@@ -1,4 +1,6 @@
 import time
+import datetime
+import re
 from watchdog.observers import Observer
 from watchdog.events import PatternMatchingEventHandler
 import fnmatch
@@ -9,6 +11,7 @@ import sys
 import glob
 
 WORKING_DIR = '/data/cbioportal/cbio-env/dropoff'
+ARCHIVE_DIR = '/data/cbioportal/cbio-env/dropoff_archive'
 LOADER_SCRIPT = '/data/cbioportal/cbio-env/importer/scripts/importer/metaImport.py'
 PORTAL_HOME = '/data/cbioportal/cbio-env/importer'
 
@@ -52,7 +55,11 @@ def untar_file(tar_ball):
                     if (os.system(loader_cmd) == 0):
                         logging.info(f"{study_name} imported")
                         try:
-                            os.remove(tar_ball)
+                            ts = str(datetime.date.today())
+                            new_tar_ball = re.sub(".tar.gz", str("_"+ts+".tar.gz"), os.path.basename(tar_ball))
+                            cmd = "mv "+tar_ball+" "+ARCHIVE_DIR+"/"+new_tar_ball
+                            os.system(cmd)
+                            #os.remove(tar_ball)
                             os.system("rm -rf %s"%outdir)
                             if not glob.glob(os.path.join(WORKING_DIR,'*.tar.gz')):
                                 restart_cmd = '/usr/local/tomcat/bin/catalina.sh stop;sleep 8;/usr/local/tomcat/bin/catalina.sh start'
