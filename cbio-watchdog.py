@@ -62,6 +62,11 @@ def untar_file(tar_ball):
                             logging.error(f"{tar_ball}/{outdir} does not exist")
                     else:
                        logging.info(f"importing {study_name} failed, please check log file for errors")
+                       try:
+                           os.remove(tar_ball)
+                           os.system("rm -rf %s"%outdir)
+                       except:
+                           logging.error(f"{tar_ball}/{outdir} can not be removed, please check your folder permissions.")
                 else:
                     logging.info(f"{tar_ball}/{outdir} does not exist")
         except:
